@@ -19,7 +19,6 @@ async function makeRequest() {
     try {
       token = await core.getIDToken();
       console.log('Token was', token);
-      console.log('Data', result.data.auth.client_token);
     } catch (error) {
       console.error(error);
       core.setFailed(`Failed to fetch JWT: ${error}`);

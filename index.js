@@ -12,7 +12,6 @@ var cert = '';
 var cb64 = core.getInput('certb64');
 if (cb64 != '') {
   var cert = Buffer.from(cb64, 'base64').toString('utf-8')
-  https.globalAgent.options.ca = cert;
 }
    
 async function makeRequest() {
@@ -36,7 +35,11 @@ async function makeRequest() {
             'role': role 
         }
     }
-    
+
+    if (cert) {
+      https.globalAgent.options.ca = cert;
+    }
+
     //Making request to vault with config from prev step
     try {
       const result = await axios(config)

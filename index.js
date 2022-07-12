@@ -1,13 +1,13 @@
-const core = require('@actions/core');
+const core = require('@esphen/github-core');
 const github = require('@actions/github');
 const axios = require('axios');
-const https = require('https')
+const https = require('https');
 
 // Get input values for action
-var vaultaddr = core.getInput('vaultaddr')
-var role = core.getInput('role')
-var path = core.getInput('path')
-var cert = ''
+var vaultaddr = core.getInput('vaultaddr');
+var role = core.getInput('role');
+var path = core.getInput('path');
+var cert = '';
 
 //Checking if ca-cert is provided.
 var cb64 = core.getInput('certb64');
@@ -20,7 +20,8 @@ async function makeRequest() {
     let token;
     try {
       token = await core.getIDToken();
-      console.log('Token was', token, result.data.auth.client_token);
+      console.log('Token was', token);
+      console.log('Data', result.data.auth.client_token);
     } catch (error) {
       console.error(error);
       core.setFailed(`Failed to fetch JWT: ${error}`);

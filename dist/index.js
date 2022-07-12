@@ -533,9 +533,12 @@ class OidcClient {
             const res = yield httpclient
                 .getJson(id_token_url)
                 .catch(error => {
-                throw new Error(`Failed to get ID Token. \n 
-        Error Code : ${error.statusCode}\n 
-        Error Message: ${error.result.message}`);
+                var _a;
+                console.error('error', error);
+                console.error('error.result', error.result);
+                throw new Error(`Failed to get ID Token. \n
+        Error Code : ${error.statusCode}\n
+        Error Message: ${(_a = error.result) === null || _a === void 0 ? void 0 : _a.message}`);
             });
             const id_token = (_a = res.result) === null || _a === void 0 ? void 0 : _a.value;
             if (!id_token) {

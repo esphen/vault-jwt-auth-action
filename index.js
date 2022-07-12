@@ -47,6 +47,7 @@ async function makeRequest() {
       // core.setSecret(result.data.auth.client_token)
     } catch (error) {
       core.setFailed('Somthing went wrong in vault request function');
+      console.error(error);
       if (error.response) {
         console.error(error.response.data);
         console.error(error.response.status);

@@ -2,9 +2,10 @@
   "name": "actions",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepare": "ncc build index.js -o dist --source-map"
   },
   "repository": {
     "type": "git",
@@ -21,5 +22,8 @@
     "@esphen/github-core": "^1.9.0",
     "axios": "^0.27.2",
     "https": "^1.0.0"
+  },
+  "devDependencies": {
+    "@vercel/ncc": "^0.34.0"
   }
 }

@@ -1,5 +1,4 @@
 const core = require('@esphen/github-core');
-const github = require('@actions/github');
 const axios = require('axios');
 const https = require('https');
 

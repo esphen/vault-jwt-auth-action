@@ -3,9 +3,7 @@ const github = require('@actions/github');
 const axios = require('axios');
 const https = require('https')
 
-
-//Fetching input values from action
-
+// Get input values for action
 var vaultaddr = core.getInput('vaultaddr')
 var role = core.getInput('role')
 var path = core.getInput('path')
@@ -14,32 +12,20 @@ var cert = ''
 //Checking if ca-cert is provided.
 var cb64 = core.getInput('certb64');
 if (cb64 != '') {
-var cert = Buffer.from(cb64, 'base64').toString('utf-8')
+  var cert = Buffer.from(cb64, 'base64').toString('utf-8')
+  https.globalAgent.options.ca = cert;
 }
-
-
-async function fetchjwt() {
-    try {
-      // Request token
-      const jwt = await core.getIDToken();
-
-      return jwt
-    } catch (error) {
-      console.log('Something broke in the jwt function')
-      core.setFailed(error);
-    }
-}
-
-const tokenpromise = fetchjwt();
    
-
 async function makeRequest() {
-
-    // trusting CA if provided.
-    if (cert) {
-    https.globalAgent.options.ca = cert;
+    let token;
+    try {
+      token = await core.getIDToken();
+      console.log('Token was', token, result.data.auth.client_token);
+    } catch (error) {
+      console.error(error);
+      core.setFailed(`Failed to fetch JWT: ${error}`);
+      return;
     }
-    const token = await tokenpromise;
 
     //Setting up config for requeset to vault
     const config = {
@@ -54,13 +40,15 @@ async function makeRequest() {
     //Making request to vault with config from prev step
     try {
       const result = await axios(config)
-      core.setOutput("token", result.data.auth.client_token)
+      core.exportVariable('token', result.data.auth.client_token);
+      core.setOutput('token', result.data.auth.client_token);
+      // core.setSecret(result.data.auth.client_token)
     } catch (error) {
-      console.log('Somthing went wrong in vault request function')
+      core.setFailed('Somthing went wrong in vault request function');
       if (error.response) {
-        console.log(error.response.data);
-        console.log(error.response.status);
-        console.log(error.response.headers);
+        console.error(error.response.data);
+        console.error(error.response.status);
+        console.error(error.response.headers);
       }
     }
 }
